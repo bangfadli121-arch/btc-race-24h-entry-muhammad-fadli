@@ -56,7 +56,12 @@ def on_batch(state, batch):
     if bar is None:
         return []
 
-    close = int(bar["c"])
+    try:
+        close = int(bar["c"])
+    except (KeyError, TypeError, ValueError):
+        return []
+    if close <= 0:
+        return []
     crossed_up, crossed_down = update_emas(close)
     position = state.positions.get(SYMBOL)
 
